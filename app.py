@@ -15,7 +15,8 @@ DB_URL = os.getenv("DB_URL")
 
 
 def get_conn():
-    return psycopg2.connect(DB_URL)
+    conn = sqlite3.connect("employees.db", check_same_thread=False)
+    return conn
 
 
 
