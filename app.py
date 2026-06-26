@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import psycopg2
+import psycopg2 as psycopg2
 from PIL import Image, ImageDraw
 import os
 from dotenv import load_dotenv
