@@ -7,7 +7,6 @@ import os
 
 # ================= DATABASE =================
 
-
 DB_NAME = "employees.db"
 
 
@@ -19,13 +18,11 @@ def get_conn():
     )
 
 
-
 def init_db():
 
     conn = get_conn()
 
     cur = conn.cursor()
-
 
     cur.execute("""
     CREATE TABLE IF NOT EXISTS employees(
@@ -38,7 +35,6 @@ def init_db():
 
     )
     """)
-
 
     conn.commit()
 
@@ -112,7 +108,6 @@ def get_employees():
         SELECT *
         FROM employees
         ORDER BY emp_id
-
         """,
 
         conn
@@ -124,7 +119,6 @@ def get_employees():
 
 
     return df
-
 
 
 
@@ -210,9 +204,14 @@ def create_greeting(
 
 
 
-    boss.thumbnail((250,300))
+    boss.thumbnail(
+        (250,300)
+    )
 
-    employee.thumbnail((250,300))
+
+    employee.thumbnail(
+        (250,300)
+    )
 
 
 
@@ -225,7 +224,6 @@ def create_greeting(
         "white"
 
     )
-
 
 
     canvas.paste(
@@ -260,7 +258,6 @@ Thank you for your dedication.
 """
 
 
-
     draw.text(
 
         (300,150),
@@ -276,20 +273,17 @@ Thank you for your dedication.
     filename = f"{name}_greeting.png"
 
 
-
     canvas.save(filename)
-
 
 
     return filename
 
 
 
-# ================= START APP =================
+# ================= APP START =================
 
 
 init_db()
-
 
 
 st.title(
@@ -314,7 +308,7 @@ menu = st.sidebar.selectbox(
 
 
 
-# ================= ADMIN =================
+# ================= ADMIN PANEL =================
 
 
 if menu == "Admin Panel":
@@ -325,70 +319,81 @@ if menu == "Admin Panel":
     )
 
 
-
-    emp_id = st.text_input(
-        "Employee ID"
-    )
-
-
-    name = st.text_input(
-        "Name"
-    )
-
-
-    designation = st.text_input(
-        "Designation"
-    )
-
-
-    role = st.text_input(
-        "Role"
-    )
-
-
-    email = st.text_input(
-        "Email ID"
-    )
-
-
-
-    if st.button(
-        "Save Employee"
+    with st.form(
+        "employee_form"
     ):
 
 
-        if emp_id.strip()=="" or name.strip()=="":
+        emp_id = st.text_input(
+            "Employee ID"
+        )
 
 
-            st.error(
-                "Employee ID and Name are mandatory"
-            )
+        name = st.text_input(
+            "Name"
+        )
 
 
-        else:
+        designation = st.text_input(
+            "Designation"
+        )
 
 
-            add_employee(
-
-                emp_id,
-
-                name,
-
-                designation,
-
-                role,
-
-                email
-
-            )
+        role = st.text_input(
+            "Role"
+        )
 
 
-            st.success(
-                "Employee saved successfully"
-            )
+        email = st.text_input(
+            "Email ID"
+        )
 
 
-            st.rerun()
+
+        submitted = st.form_submit_button(
+
+            "Save Employee"
+
+        )
+
+
+
+        if submitted:
+
+
+            if emp_id.strip() == "" or name.strip() == "":
+
+
+                st.error(
+
+                    "Employee ID and Name are mandatory"
+
+                )
+
+
+            else:
+
+
+                add_employee(
+
+                    emp_id,
+
+                    name,
+
+                    designation,
+
+                    role,
+
+                    email
+
+                )
+
+
+                st.success(
+
+                    "Employee saved successfully"
+
+                )
 
 
 
@@ -397,7 +402,9 @@ if menu == "Admin Panel":
 
 
     st.subheader(
+
         "Employee Database"
+
     )
 
 
@@ -405,13 +412,11 @@ if menu == "Admin Panel":
     df = get_employees()
 
 
-    st.dataframe(
-        df
-    )
+    st.dataframe(df)
 
 
 
-    if len(df)>0:
+    if len(df) > 0:
 
 
         delete_id = st.selectbox(
@@ -424,17 +429,23 @@ if menu == "Admin Panel":
 
 
         if st.button(
+
             "Delete Employee"
+
         ):
 
 
             delete_employee(
+
                 delete_id
+
             )
 
 
             st.warning(
+
                 "Employee deleted"
+
             )
 
 
@@ -449,7 +460,9 @@ if menu == "User Greeting":
 
 
     st.header(
+
         "Generate Greeting"
+
     )
 
 
@@ -458,13 +471,14 @@ if menu == "User Greeting":
 
 
 
-    if len(df)==0:
+    if len(df) == 0:
 
 
         st.warning(
-            "No employee data available"
-        )
 
+            "No employee data available"
+
+        )
 
 
     else:
@@ -481,38 +495,54 @@ if menu == "User Greeting":
 
 
         emp = get_employee(
+
             selected_id
+
         )
 
 
 
         st.write(
+
             "Name:",
+
             emp["name"]
+
         )
 
 
         st.write(
+
             "Designation:",
+
             emp["designation"]
+
         )
 
 
         st.write(
+
             "Role:",
+
             emp["role"]
+
         )
 
 
         st.write(
+
             "Email:",
+
             emp["email"]
+
         )
 
 
 
         camera = st.camera_input(
+
             "Take Selfie"
+
         )
 
 
@@ -522,9 +552,13 @@ if menu == "User Greeting":
             "Upload Photo",
 
             type=[
+
                 "jpg",
+
                 "jpeg",
+
                 "png"
+
             ]
 
         )
@@ -539,16 +573,24 @@ if menu == "User Greeting":
 
 
             if st.button(
+
                 "Generate Greeting"
+
             ):
 
 
-                boss_photo = "assets/boss_photo.jpg"
+                boss_photo = (
+
+                    "assets/boss_photo.jpg"
+
+                )
 
 
 
                 if os.path.exists(
+
                     boss_photo
+
                 ):
 
 
@@ -566,17 +608,27 @@ if menu == "User Greeting":
 
 
                     st.success(
+
                         "Greeting Generated"
+
                     )
 
 
                     st.image(
+
                         result
+
                     )
 
 
 
-                    with open(result,"rb") as file:
+                    with open(
+
+                        result,
+
+                        "rb"
+
+                    ) as file:
 
 
                         st.download_button(
@@ -590,9 +642,12 @@ if menu == "User Greeting":
                         )
 
 
+
                 else:
 
 
                     st.error(
+
                         "Boss photo missing"
+
                     )
