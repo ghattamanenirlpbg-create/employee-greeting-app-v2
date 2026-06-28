@@ -8,7 +8,7 @@ import textwrap
 
 DB_NAME = "employees.db"
 
-# ================= ONLY FONT FIX (NO LOGIC CHANGE) =================
+# ================= UI FONT (SAFE ONLY IMPROVEMENT) =================
 st.markdown("""
 <style>
 html, body, [class*="css"] {
@@ -74,10 +74,12 @@ def create_tables():
 
 def login_user(username, password):
     conn = get_connection()
+
     result = conn.execute("""
         SELECT role FROM users
         WHERE username=? AND password=?
     """, (username, password)).fetchone()
+
     conn.close()
     return result
 
@@ -103,7 +105,6 @@ def create_card(boss_photo, employee_photo, name, message):
     card = Image.new("RGB", (1400, 900), "white")
     draw = ImageDraw.Draw(card)
 
-    # ONLY FONT SIZE INCREASED
     try:
         title_font = ImageFont.truetype("arial.ttf", 60)
         text_font = ImageFont.truetype("arial.ttf", 34)
@@ -137,9 +138,10 @@ def create_card(boss_photo, employee_photo, name, message):
     return card
 
 
-# ================= EVERYTHING BELOW IS YOUR ORIGINAL FLOW =================
+# ================= EMPLOYEE MANAGEMENT =================
 
 def employee_management():
+
     st.subheader("Employee Management")
 
     option = st.selectbox("Action", ["Add Employee", "View Employees"])
@@ -171,6 +173,8 @@ def employee_management():
         st.table(data)
 
 
+# ================= USER MANAGEMENT =================
+
 def user_management():
 
     st.subheader("User Management")
@@ -197,6 +201,8 @@ def user_management():
         st.table(data)
 
 
+# ================= GREETING GENERATOR (FIXED PHOTO FLOW) =================
+
 def greeting_generator():
 
     st.subheader("Greeting Generator")
@@ -221,11 +227,40 @@ def greeting_generator():
             st.write("Designation:", designation)
             st.write("Role:", role)
 
-            # ❗ ORIGINAL FLOW KEPT EXACTLY SAME
-            upload = st.file_uploader("Upload Photo")
-            camera = st.camera_input("Take Selfie")
+            # ================= PHOTO FLOW FIX =================
 
-            final_photo = camera if camera else upload
+            photo_option = st.radio(
+                "Choose Photo Option",
+                ["Upload Photo", "Take Selfie"]
+            )
+
+            final_photo = None
+
+            if photo_option == "Upload Photo":
+
+                final_photo = st.file_uploader(
+                    "Upload Photo",
+                    type=["jpg", "jpeg", "png"]
+                )
+
+            else:
+
+                st.info("Take selfie and confirm before using it")
+
+                camera_photo = st.camera_input("Take Selfie")
+
+                if camera_photo:
+
+                    st.image(camera_photo, caption="Preview")
+
+                    confirm = st.checkbox("Confirm this photo")
+
+                    if confirm:
+                        final_photo = camera_photo
+                    else:
+                        st.warning("Uncheck and retake if needed")
+
+            # ================= CARD GENERATION =================
 
             if final_photo:
 
