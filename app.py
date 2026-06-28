@@ -152,19 +152,23 @@ def create_card(boss_photo, employee_photo, name, message):
     try:
 
         title_font = ImageFont.truetype(
-            "arialbd.ttf",65
+            "arialbd.ttf",
+            85
         )
 
         body_font = ImageFont.truetype(
-            "arial.ttf",32
+            "arial.ttf",
+            42
         )
 
         name_font = ImageFont.truetype(
-            "arialbd.ttf",30
+            "arialbd.ttf",
+            36
         )
 
         small_font = ImageFont.truetype(
-            "arial.ttf",26
+            "arial.ttf",
+            32
         )
 
 
@@ -217,30 +221,28 @@ def create_card(boss_photo, employee_photo, name, message):
         (230,230)
     )
 
-
     employee_photo=employee_photo.resize(
         (230,230)
     )
 
 
-
     card.paste(
         boss_photo,
-        (70,180)
+        (60,190)
     )
 
 
     card.paste(
         employee_photo,
-        (900,180)
+        (910,190)
     )
 
 
 
-    # LEFT TEXT
+    # LEFT DETAILS
 
     draw.multiline_text(
-        (70,430),
+        (55,440),
         "From:\nDr. Damodharen M\nChief Digital Officer",
         font=small_font,
         spacing=8,
@@ -249,21 +251,21 @@ def create_card(boss_photo, employee_photo, name, message):
 
 
 
-    # RIGHT TEXT
+    # RIGHT DETAILS
 
     draw.multiline_text(
-        (900,430),
+        (900,440),
         f"To:\n{name}",
         font=name_font,
-        spacing=10,
+        spacing=8,
         fill="#162447"
     )
 
 
 
-    # MESSAGE CENTER
+    # CENTER MESSAGE
 
-    clean_message=message.replace(
+    clean_message = message.replace(
         "\n",
         " "
     )
@@ -271,11 +273,11 @@ def create_card(boss_photo, employee_photo, name, message):
 
     lines=textwrap.wrap(
         clean_message,
-        width=34
+        width=30
     )
 
 
-    y=200
+    y=190
 
 
     for line in lines:
@@ -288,12 +290,12 @@ def create_card(boss_photo, employee_photo, name, message):
         )
 
 
-        w=box[2]-box[0]
+        width=box[2]-box[0]
 
 
         draw.text(
             (
-            (1200-w)/2,
+            (1200-width)/2,
             y
             ),
             line,
@@ -302,7 +304,7 @@ def create_card(boss_photo, employee_photo, name, message):
         )
 
 
-        y += 45
+        y += 58
 
 
 
