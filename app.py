@@ -91,7 +91,7 @@ Thank you for your continued efforts.
 """
 
 
-# ================= CARD (REFINED DESIGN) =================
+# ================= CARD (FINAL FIXED DESIGN) =================
 
 def create_card(boss_photo, employee_photo, name, message):
 
@@ -103,7 +103,7 @@ def create_card(boss_photo, employee_photo, name, message):
     try:
         title_font = ImageFont.truetype("DejaVuSans-Bold.ttf", 64)
         sub_font = ImageFont.truetype("DejaVuSans.ttf", 40)
-        text_font = ImageFont.truetype("DejaVuSans.ttf", 36)
+        text_font = ImageFont.truetype("DejaVuSans.ttf", 34)
         footer_font = ImageFont.truetype("DejaVuSans.ttf", 32)
     except:
         title_font = ImageFont.load_default()
@@ -132,8 +132,8 @@ def create_card(boss_photo, employee_photo, name, message):
     wrapped_lines = textwrap.wrap(message.strip(), width=42)
 
     # Center block between images
-    start_y = 640
-    line_height = 55
+    start_y = 640   # lower start so it doesn’t overlap
+    line_height = 48
     center_x = 800
 
     for i, line in enumerate(wrapped_lines):
@@ -147,6 +147,9 @@ def create_card(boss_photo, employee_photo, name, message):
         )
 
     # ================= FOOTER =================
+    # Separator line above footer
+    draw.line([(200, 850), (1400, 850)], fill="black", width=2)
+
     footer = "From: Dr. Damodharan M, Chief Digital Officer"
     bbox = draw.textbbox((0, 0), footer, font=footer_font)
     footer_w = bbox[2] - bbox[0]
