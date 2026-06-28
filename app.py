@@ -24,12 +24,6 @@ html, body, [class*="css"] {
 }
 
 
-[data-testid="stImage"] img {
-    width: 100% !important;
-    height: auto !important;
-}
-
-
 .block-container {
     max-width: 95% !important;
     padding-left: 2rem !important;
@@ -152,23 +146,19 @@ def create_card(boss_photo, employee_photo, name, message):
     try:
 
         title_font = ImageFont.truetype(
-            "arialbd.ttf",
-            85
+            "arialbd.ttf",65
         )
 
         body_font = ImageFont.truetype(
-            "arial.ttf",
-            42
+            "arial.ttf",32
         )
 
         name_font = ImageFont.truetype(
-            "arialbd.ttf",
-            36
+            "arialbd.ttf",30
         )
 
         small_font = ImageFont.truetype(
-            "arial.ttf",
-            32
+            "arial.ttf",26
         )
 
 
@@ -221,28 +211,30 @@ def create_card(boss_photo, employee_photo, name, message):
         (230,230)
     )
 
+
     employee_photo=employee_photo.resize(
         (230,230)
     )
 
 
+
     card.paste(
         boss_photo,
-        (60,190)
+        (70,180)
     )
 
 
     card.paste(
         employee_photo,
-        (910,190)
+        (900,180)
     )
 
 
 
-    # LEFT DETAILS
+    # LEFT TEXT
 
     draw.multiline_text(
-        (55,440),
+        (70,430),
         "From:\nDr. Damodharen M\nChief Digital Officer",
         font=small_font,
         spacing=8,
@@ -251,21 +243,21 @@ def create_card(boss_photo, employee_photo, name, message):
 
 
 
-    # RIGHT DETAILS
+    # RIGHT TEXT
 
     draw.multiline_text(
-        (900,440),
+        (900,430),
         f"To:\n{name}",
         font=name_font,
-        spacing=8,
+        spacing=10,
         fill="#162447"
     )
 
 
 
-    # CENTER MESSAGE
+    # MESSAGE CENTER
 
-    clean_message = message.replace(
+    clean_message=message.replace(
         "\n",
         " "
     )
@@ -273,11 +265,11 @@ def create_card(boss_photo, employee_photo, name, message):
 
     lines=textwrap.wrap(
         clean_message,
-        width=30
+        width=34
     )
 
 
-    y=190
+    y=200
 
 
     for line in lines:
@@ -290,12 +282,12 @@ def create_card(boss_photo, employee_photo, name, message):
         )
 
 
-        width=box[2]-box[0]
+        w=box[2]-box[0]
 
 
         draw.text(
             (
-            (1200-width)/2,
+            (1200-w)/2,
             y
             ),
             line,
@@ -304,7 +296,7 @@ def create_card(boss_photo, employee_photo, name, message):
         )
 
 
-        y += 58
+        y += 45
 
 
 
@@ -674,7 +666,35 @@ def greeting_generator():
 
 
 
-                    st.image(card,use_container_width=True)
+                    st.markdown(
+                    """
+                    <style>
+                    .card-container img {
+                        max-width: none !important;
+                        width: 1200px !important;
+                    }
+                    </style>
+                    """,
+                    unsafe_allow_html=True
+                    )
+
+
+                    st.markdown(
+                    '<div class="card-container">',
+                    unsafe_allow_html=True
+                    )
+
+
+                    st.image(
+                    card,
+                    width=1200
+                    )
+
+
+                    st.markdown(
+                    '</div>',
+                    unsafe_allow_html=True
+                    )
 
 
 
