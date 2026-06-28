@@ -133,65 +133,52 @@ Thank you for your continued efforts.
 
 def create_card(boss_photo, employee_photo, name, message):
 
-
     card = Image.new(
         "RGB",
         (1600,1000),
         "#FAF8F2"
     )
 
-
     draw = ImageDraw.Draw(card)
-
 
 
     try:
 
         title_font = ImageFont.truetype(
             "arialbd.ttf",
-            95
+            90
         )
-
 
         body_font = ImageFont.truetype(
             "arial.ttf",
-            45
+            55
         )
-
 
         name_font = ImageFont.truetype(
             "arialbd.ttf",
-            48
+            45
         )
-
 
         footer_font = ImageFont.truetype(
             "arialbd.ttf",
-            38
-        )
-
-
-        small_font = ImageFont.truetype(
-            "arial.ttf",
-            32
+            42
         )
 
 
     except:
 
-
         title_font = ImageFont.load_default()
         body_font = ImageFont.load_default()
         name_font = ImageFont.load_default()
         footer_font = ImageFont.load_default()
-        small_font = ImageFont.load_default()
 
 
 
     # BORDER
 
-    draw.rectangle(
-        (20,20,1580,980),
+    draw.rounded_rectangle(
+        (25,25,1575,975),
+        radius=35,
         outline="#C99A2E",
         width=8
     )
@@ -201,7 +188,6 @@ def create_card(boss_photo, employee_photo, name, message):
     # TITLE
 
     title="APPRECIATION NOTE"
-
 
     box=draw.textbbox(
         (0,0),
@@ -224,43 +210,25 @@ def create_card(boss_photo, employee_photo, name, message):
 
     # PHOTOS
 
-
     boss_photo=boss_photo.resize(
-        (360,360)
+        (300,300)
     )
 
     employee_photo=employee_photo.resize(
-        (360,360)
-    )
-
-
-
-    draw.rounded_rectangle(
-        (100,250,480,650),
-        radius=25,
-        outline="#C99A2E",
-        width=6
-    )
-
-
-    draw.rounded_rectangle(
-        (1120,250,1500,650),
-        radius=25,
-        outline="#C99A2E",
-        width=6
+        (300,300)
     )
 
 
 
     card.paste(
         boss_photo,
-        (110,260)
+        (120,270)
     )
 
 
     card.paste(
         employee_photo,
-        (1130,260)
+        (1180,270)
     )
 
 
@@ -269,15 +237,15 @@ def create_card(boss_photo, employee_photo, name, message):
 
 
     draw.text(
-        (160,690),
-        "From Leadership",
-        font=small_font,
+        (120,620),
+        "Leadership",
+        font=name_font,
         fill="#162447"
     )
 
 
     draw.text(
-        (1240,690),
+        (1180,620),
         name,
         font=name_font,
         fill="#162447"
@@ -285,18 +253,14 @@ def create_card(boss_photo, employee_photo, name, message):
 
 
 
-    # CENTER MESSAGE
+    # MESSAGE AREA
 
-
-    clean_message = message.replace(
-        "\n",
-        " "
-    )
+    clean_message = message.replace("\n"," ")
 
 
     lines=textwrap.wrap(
         clean_message,
-        width=40
+        width=32
     )
 
 
@@ -327,36 +291,11 @@ def create_card(boss_photo, employee_photo, name, message):
         )
 
 
-        y+=70
+        y += 85
 
 
 
-    # THANK YOU
-
-
-    thank="Thank you for your continued efforts."
-
-
-    box=draw.textbbox(
-        (0,0),
-        thank,
-        font=footer_font
-    )
-
-
-    draw.text(
-        (
-        (1600-(box[2]-box[0]))/2,
-        760
-        ),
-        thank,
-        font=footer_font,
-        fill="#B8860B"
-    )
-
-
-
-    # FINAL FOOTER
+    # FOOTER MESSAGE
 
 
     footer="From: Dr. Damodharen M, Chief Digital Officer"
@@ -365,17 +304,17 @@ def create_card(boss_photo, employee_photo, name, message):
     box=draw.textbbox(
         (0,0),
         footer,
-        font=small_font
+        font=footer_font
     )
 
 
     draw.text(
         (
         (1600-(box[2]-box[0]))/2,
-        900
+        880
         ),
         footer,
-        font=small_font,
+        font=footer_font,
         fill="#162447"
     )
 
