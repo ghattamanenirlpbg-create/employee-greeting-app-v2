@@ -95,11 +95,9 @@ Thank you for your continued efforts.
 
 def create_card(boss_photo, employee_photo, name, message):
 
-    # Bigger canvas
     card = Image.new("RGB", (1600, 950), "white")
     draw = ImageDraw.Draw(card)
 
-    # Fonts
     try:
         title_font = ImageFont.truetype("DejaVuSans-Bold.ttf", 64)
         sub_font = ImageFont.truetype("DejaVuSans.ttf", 40)
@@ -111,45 +109,41 @@ def create_card(boss_photo, employee_photo, name, message):
         text_font = ImageFont.load_default()
         footer_font = ImageFont.load_default()
 
-    # ================= TITLE =================
+    # Title
     title = "APPRECIATION NOTE"
     bbox = draw.textbbox((0, 0), title, font=title_font)
-    title_w = bbox[2] - bbox[0]
-    draw.text(((1600 - title_w) / 2, 40), title, font=title_font, fill="black")
+    draw.text(((1600 - (bbox[2]-bbox[0])) / 2, 40), title, font=title_font, fill="black")
 
-    # ================= IMAGES =================
+    # Photos
     boss_photo = boss_photo.resize((360, 360))
     employee_photo = employee_photo.resize((360, 360))
-
     card.paste(boss_photo, (120, 180))
     card.paste(employee_photo, (1120, 180))
 
-    # Labels under images
     draw.text((150, 560), "From Leadership", font=sub_font, fill="black")
     draw.text((1200, 560), name, font=sub_font, fill="black")
 
-    # ================= MESSAGE =================
+    # Message block
     wrapped_lines = textwrap.wrap(message.strip(), width=42)
-
-    # Center block between images
-    start_y = 640   # lower start so it doesn’t overlap
     line_height = 48
+    total_height = len(wrapped_lines) * line_height
+
+    # Define middle area (between images, above footer line)
+    top_y = 600
+    bottom_y = 820
+    available_height = bottom_y - top_y
+
+    # Center vertically
+    start_y = top_y + (available_height - total_height) // 2
     center_x = 800
 
     for i, line in enumerate(wrapped_lines):
         bbox = draw.textbbox((0, 0), line, font=text_font)
         line_w = bbox[2] - bbox[0]
-        draw.text(
-            (center_x - line_w / 2, start_y + i * line_height),
-            line,
-            font=text_font,
-            fill="black"
-        )
+        draw.text((center_x - line_w / 2, start_y + i * line_height), line, font=text_font, fill="black")
 
-    # ================= FOOTER =================
-    # Separator line above footer
+    # Footer
     draw.line([(200, 850), (1400, 850)], fill="black", width=2)
-
     footer = "From: Dr. Damodharan M, Chief Digital Officer"
     bbox = draw.textbbox((0, 0), footer, font=footer_font)
     footer_w = bbox[2] - bbox[0]
@@ -307,9 +301,3 @@ else:
         t1, t2, t3 = st.tabs(["Employee Management", "User Management", "Greeting Generator"])
         with t1:
             employee_management()
-        with t2:
-            user_management()
-        with t3:
-            greeting_generator()
-    else:
-        greeting_generator()
