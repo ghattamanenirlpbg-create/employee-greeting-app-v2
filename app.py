@@ -8,20 +8,15 @@ import textwrap
 
 DB_NAME = "employees.db"
 
-# ================= UI FONT (SAFE ONLY IMPROVEMENT) =================
+# ================= UI FONT (Streamlit only) =================
 st.markdown("""
 <style>
 html, body, [class*="css"] {
     font-size: 18px !important;
 }
 
-h1 {
-    font-size: 40px !important;
-}
-
-h2 {
-    font-size: 30px !important;
-}
+h1 { font-size: 40px !important; }
+h2 { font-size: 30px !important; }
 
 .stButton button {
     font-size: 16px !important;
@@ -74,12 +69,10 @@ def create_tables():
 
 def login_user(username, password):
     conn = get_connection()
-
     result = conn.execute("""
         SELECT role FROM users
         WHERE username=? AND password=?
     """, (username, password)).fetchone()
-
     conn.close()
     return result
 
@@ -98,38 +91,44 @@ Thank you for your continued efforts.
 """
 
 
-# ================= CARD =================
+# ================= CARD (FONT FIX HERE) =================
 
 def create_card(boss_photo, employee_photo, name, message):
 
     card = Image.new("RGB", (1400, 900), "white")
     draw = ImageDraw.Draw(card)
 
+    # 🔥 INCREASED FONT SIZE (MAIN FIX)
     try:
-        title_font = ImageFont.truetype("arial.ttf", 60)
-        text_font = ImageFont.truetype("arial.ttf", 34)
+        title_font = ImageFont.truetype("arial.ttf", 85)
+        text_font = ImageFont.truetype("arial.ttf", 42)
     except:
         title_font = ImageFont.load_default()
         text_font = ImageFont.load_default()
 
-    draw.text((380, 50), "APPRECIATION NOTE", font=title_font, fill="black")
+    # Title
+    draw.text((350, 40), "APPRECIATION NOTE", font=title_font, fill="black")
 
-    boss_photo = boss_photo.resize((250, 250))
-    employee_photo = employee_photo.resize((250, 250))
+    # Images
+    boss_photo = boss_photo.resize((280, 280))
+    employee_photo = employee_photo.resize((280, 280))
 
-    card.paste(boss_photo, (100, 250))
-    card.paste(employee_photo, (1050, 250))
+    card.paste(boss_photo, (100, 260))
+    card.paste(employee_photo, (1020, 260))
+
+    # 🔥 BETTER WRAPPING FOR READABILITY
+    wrapped_message = textwrap.fill(message, width=28)
 
     draw.multiline_text(
-        (420, 250),
-        textwrap.fill(message, 35),
+        (420, 260),
+        wrapped_message,
         font=text_font,
-        spacing=12,
+        spacing=16,
         fill="black"
     )
 
     draw.text(
-        (120, 600),
+        (120, 620),
         "From:\nManagement Team",
         font=text_font,
         fill="black"
@@ -141,7 +140,6 @@ def create_card(boss_photo, employee_photo, name, message):
 # ================= EMPLOYEE MANAGEMENT =================
 
 def employee_management():
-
     st.subheader("Employee Management")
 
     option = st.selectbox("Action", ["Add Employee", "View Employees"])
@@ -201,7 +199,7 @@ def user_management():
         st.table(data)
 
 
-# ================= GREETING GENERATOR (FIXED PHOTO FLOW) =================
+# ================= GREETING =================
 
 def greeting_generator():
 
@@ -227,8 +225,6 @@ def greeting_generator():
             st.write("Designation:", designation)
             st.write("Role:", role)
 
-            # ================= PHOTO FLOW FIX =================
-
             photo_option = st.radio(
                 "Choose Photo Option",
                 ["Upload Photo", "Take Selfie"]
@@ -237,30 +233,21 @@ def greeting_generator():
             final_photo = None
 
             if photo_option == "Upload Photo":
-
                 final_photo = st.file_uploader(
                     "Upload Photo",
                     type=["jpg", "jpeg", "png"]
                 )
 
             else:
-
-                st.info("Take selfie and confirm before using it")
-
                 camera_photo = st.camera_input("Take Selfie")
 
                 if camera_photo:
-
                     st.image(camera_photo, caption="Preview")
 
                     confirm = st.checkbox("Confirm this photo")
 
                     if confirm:
                         final_photo = camera_photo
-                    else:
-                        st.warning("Uncheck and retake if needed")
-
-            # ================= CARD GENERATION =================
 
             if final_photo:
 
