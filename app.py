@@ -91,53 +91,66 @@ Thank you for your continued efforts.
 """
 
 
-# ================= CARD (FINAL FIXED DESIGN) =================
+# ================= CARD (IMPROVED DESIGN ONLY) =================
 
 def create_card(boss_photo, employee_photo, name, message):
 
     card = Image.new("RGB", (1400, 900), "white")
     draw = ImageDraw.Draw(card)
 
-    # 🔥 BIGGER & CLEAR FONT
+    # Fonts (BIGGER + CLEANER HIERARCHY)
     try:
-        title_font = ImageFont.truetype("arial.ttf", 90)
-        text_font = ImageFont.truetype("arial.ttf", 52)
+        title_font = ImageFont.truetype("arial.ttf", 80)
+        sub_font = ImageFont.truetype("arial.ttf", 48)
+        text_font = ImageFont.truetype("arial.ttf", 44)
+        footer_font = ImageFont.truetype("arial.ttf", 38)
     except:
         title_font = ImageFont.load_default()
+        sub_font = ImageFont.load_default()
         text_font = ImageFont.load_default()
+        footer_font = ImageFont.load_default()
 
-    # Title (centered visually)
-    draw.text((350, 30), "APPRECIATION NOTE", font=title_font, fill="black")
-
-    # Resize images
-    boss_photo = boss_photo.resize((320, 320))
-    employee_photo = employee_photo.resize((320, 320))
-
-    # Place images (balanced layout)
-    card.paste(boss_photo, (60, 250))
-    card.paste(employee_photo, (1020, 250))
-
-    # ================= TEXT AREA FIX =================
-
-    # Center text block area (BETWEEN images)
-    text_start_x = 420
-    text_width = 560
-
-    wrapped_text = textwrap.fill(message, width=30)
-
-    draw.multiline_text(
-        (text_start_x, 260),
-        wrapped_text,
-        font=text_font,
-        spacing=20,
+    # ================= TITLE =================
+    draw.text(
+        (260, 30),
+        "APPRECIATION NOTE",
+        font=title_font,
         fill="black"
     )
 
-    # Footer text
-    draw.text(
-        (120, 700),
-        "From:\nManagement Team",
+    # ================= IMAGES =================
+    boss_photo = boss_photo.resize((340, 340))
+    employee_photo = employee_photo.resize((340, 340))
+
+    card.paste(boss_photo, (70, 200))
+    card.paste(employee_photo, (990, 200))
+
+    # Labels under images
+    draw.text((120, 560), "From Leadership", font=sub_font, fill="black")
+    draw.text((1010, 560), f"{name}", font=sub_font, fill="black")
+
+    # ================= MESSAGE CENTER =================
+    wrapped_text = textwrap.fill(message, width=42)
+
+    text_x = 420
+    text_y = 260
+
+    draw.multiline_text(
+        (text_x, text_y),
+        wrapped_text,
         font=text_font,
+        spacing=14,
+        fill="black",
+        align="center"
+    )
+
+    # ================= FOOTER =================
+    footer_text = "From: Dr. Damodharen M, Chief Digital Officer"
+
+    draw.text(
+        (320, 800),
+        footer_text,
+        font=footer_font,
         fill="black"
     )
 
