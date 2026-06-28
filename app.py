@@ -145,23 +145,19 @@ def create_card(boss_photo, employee_photo, name, message):
     try:
 
         title_font = ImageFont.truetype(
-            "arialbd.ttf",
-            90
+            "arialbd.ttf",85
         )
 
         body_font = ImageFont.truetype(
-            "arial.ttf",
-            55
+            "arial.ttf",38
         )
 
         name_font = ImageFont.truetype(
-            "arialbd.ttf",
-            45
+            "arialbd.ttf",34
         )
 
-        footer_font = ImageFont.truetype(
-            "arialbd.ttf",
-            42
+        small_font = ImageFont.truetype(
+            "arial.ttf",30
         )
 
 
@@ -170,7 +166,7 @@ def create_card(boss_photo, employee_photo, name, message):
         title_font = ImageFont.load_default()
         body_font = ImageFont.load_default()
         name_font = ImageFont.load_default()
-        footer_font = ImageFont.load_default()
+        small_font = ImageFont.load_default()
 
 
 
@@ -188,6 +184,7 @@ def create_card(boss_photo, employee_photo, name, message):
     # TITLE
 
     title="APPRECIATION NOTE"
+
 
     box=draw.textbbox(
         (0,0),
@@ -233,19 +230,45 @@ def create_card(boss_photo, employee_photo, name, message):
 
 
 
-    # PHOTO LABELS
+    # LEFT PHOTO TEXT
+
+    draw.text(
+        (145,610),
+        "From:",
+        font=small_font,
+        fill="#162447"
+    )
 
 
     draw.text(
-        (120,620),
-        "Leadership",
+        (120,660),
+        "Dr. Damodharen M",
         font=name_font,
         fill="#162447"
     )
 
 
     draw.text(
-        (1180,620),
+        (140,710),
+        "Chief Digital Officer",
+        font=small_font,
+        fill="#162447"
+    )
+
+
+
+    # RIGHT PHOTO TEXT
+
+    draw.text(
+        (1230,610),
+        "To:",
+        font=small_font,
+        fill="#162447"
+    )
+
+
+    draw.text(
+        (1180,660),
         name,
         font=name_font,
         fill="#162447"
@@ -253,18 +276,21 @@ def create_card(boss_photo, employee_photo, name, message):
 
 
 
-    # MESSAGE AREA
+    # CENTER MESSAGE
 
-    clean_message = message.replace("\n"," ")
+    clean_message = message.replace(
+        "\n",
+        " "
+    )
 
 
     lines=textwrap.wrap(
         clean_message,
-        width=32
+        width=38
     )
 
 
-    y=300
+    y=320
 
 
     for line in lines:
@@ -291,32 +317,8 @@ def create_card(boss_photo, employee_photo, name, message):
         )
 
 
-        y += 85
+        y += 65
 
-
-
-    # FOOTER MESSAGE
-
-
-    footer="From: Dr. Damodharen M, Chief Digital Officer"
-
-
-    box=draw.textbbox(
-        (0,0),
-        footer,
-        font=footer_font
-    )
-
-
-    draw.text(
-        (
-        (1600-(box[2]-box[0]))/2,
-        880
-        ),
-        footer,
-        font=footer_font,
-        fill="#162447"
-    )
 
 
     return card
