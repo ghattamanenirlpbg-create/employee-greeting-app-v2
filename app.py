@@ -91,7 +91,7 @@ Thank you for your continued efforts.
 """
 
 
-# ================= CARD (IMPROVED FIXED DESIGN) =================
+# ================= CARD (REFINED DESIGN) =================
 
 def create_card(boss_photo, employee_photo, name, message):
 
@@ -99,11 +99,11 @@ def create_card(boss_photo, employee_photo, name, message):
     card = Image.new("RGB", (1600, 950), "white")
     draw = ImageDraw.Draw(card)
 
-    # ✅ FIX: Use DejaVuSans (works in cloud + better readability)
+    # Fonts
     try:
-        title_font = ImageFont.truetype("DejaVuSans.ttf", 58)
+        title_font = ImageFont.truetype("DejaVuSans-Bold.ttf", 64)
         sub_font = ImageFont.truetype("DejaVuSans.ttf", 40)
-        text_font = ImageFont.truetype("DejaVuSans.ttf", 38)
+        text_font = ImageFont.truetype("DejaVuSans.ttf", 36)
         footer_font = ImageFont.truetype("DejaVuSans.ttf", 32)
     except:
         title_font = ImageFont.load_default()
@@ -115,39 +115,30 @@ def create_card(boss_photo, employee_photo, name, message):
     title = "APPRECIATION NOTE"
     bbox = draw.textbbox((0, 0), title, font=title_font)
     title_w = bbox[2] - bbox[0]
-
-    draw.text(((1600 - title_w) / 2, 25), title, font=title_font, fill="black")
+    draw.text(((1600 - title_w) / 2, 40), title, font=title_font, fill="black")
 
     # ================= IMAGES =================
     boss_photo = boss_photo.resize((360, 360))
     employee_photo = employee_photo.resize((360, 360))
 
-    card.paste(boss_photo, (120, 200))
-    card.paste(employee_photo, (1120, 200))
+    card.paste(boss_photo, (120, 180))
+    card.paste(employee_photo, (1120, 180))
 
     # Labels under images
-    draw.text((150, 580), "From Leadership", font=sub_font, fill="black")
-    draw.text((1200, 580), name, font=sub_font, fill="black")
+    draw.text((150, 560), "From Leadership", font=sub_font, fill="black")
+    draw.text((1200, 560), name, font=sub_font, fill="black")
 
-    # ================= MESSAGE (FIXED CENTER BLOCK) =================
+    # ================= MESSAGE =================
+    wrapped_lines = textwrap.wrap(message.strip(), width=42)
 
-    # ✔ Narrower wrap = better readability
-    wrapped_lines = textwrap.wrap(message, width=42)
-
-    # ✔ Center column area (between images)
-    left_x = 420
-    right_x = 1180
-    center_x = (left_x + right_x) // 2
-
-    # ✔ Move DOWN so it doesn't overlap images
-    start_y = 650
-
-    line_height = 60
+    # Center block between images
+    start_y = 640
+    line_height = 55
+    center_x = 800
 
     for i, line in enumerate(wrapped_lines):
         bbox = draw.textbbox((0, 0), line, font=text_font)
         line_w = bbox[2] - bbox[0]
-
         draw.text(
             (center_x - line_w / 2, start_y + i * line_height),
             line,
@@ -156,30 +147,21 @@ def create_card(boss_photo, employee_photo, name, message):
         )
 
     # ================= FOOTER =================
-    footer = "From: Dr. Damodharen M, Chief Digital Officer"
-
+    footer = "From: Dr. Damodharan M, Chief Digital Officer"
     bbox = draw.textbbox((0, 0), footer, font=footer_font)
     footer_w = bbox[2] - bbox[0]
-
-    draw.text(
-        ((1600 - footer_w) / 2, 880),
-        footer,
-        font=footer_font,
-        fill="black"
-    )
+    draw.text(((1600 - footer_w) / 2, 880), footer, font=footer_font, fill="black")
 
     return card
 
 
 # ================= EMPLOYEE MANAGEMENT =================
-# (UNCHANGED)
 def employee_management():
     st.subheader("Employee Management")
 
     option = st.selectbox("Action", ["Add Employee", "View Employees"])
 
     if option == "Add Employee":
-
         with st.form("emp"):
             emp_id = st.text_input("Employee ID")
             name = st.text_input("Name")
@@ -206,10 +188,7 @@ def employee_management():
 
 
 # ================= USER MANAGEMENT =================
-# (UNCHANGED)
-
 def user_management():
-
     st.subheader("User Management")
 
     username = st.text_input("Username")
@@ -217,14 +196,12 @@ def user_management():
     role = st.selectbox("Role", ["USER", "ADMIN"])
 
     if st.button("Create User"):
-
         conn = get_connection()
         conn.execute("""
             INSERT OR REPLACE INTO users VALUES(?,?,?)
         """, (username, password, role))
         conn.commit()
         conn.close()
-
         st.success("User Created")
 
     if st.checkbox("View Users"):
@@ -235,16 +212,12 @@ def user_management():
 
 
 # ================= GREETING GENERATOR =================
-# (UNCHANGED EXCEPT CARD CALL)
-
 def greeting_generator():
-
     st.subheader("Greeting Generator")
 
     emp_id = st.text_input("Enter Employee ID")
 
     if emp_id:
-
         conn = get_connection()
         employee = conn.execute("""
             SELECT name,designation,role
@@ -254,119 +227,86 @@ def greeting_generator():
         conn.close()
 
         if employee:
-
             name, designation, role = employee
-
             st.success(f"Employee Found: {name}")
             st.write("Designation:", designation)
             st.write("Role:", role)
 
-            photo_option = st.radio(
-                "Choose Photo Option",
-                ["Upload Photo", "Take Selfie"]
-            )
-
+            photo_option = st.radio("Choose Photo Option", ["Upload Photo", "Take Selfie"])
             final_photo = None
 
             if photo_option == "Upload Photo":
-                final_photo = st.file_uploader(
-                    "Upload Photo",
-                    type=["jpg", "jpeg", "png"]
-                )
-
+                final_photo = st.file_uploader("Upload Photo", type=["jpg", "jpeg", "png"])
             else:
                 camera_photo = st.camera_input("Take Selfie")
-
                 if camera_photo:
                     st.image(camera_photo, caption="Preview")
                     confirm = st.checkbox("Confirm this photo")
-
                     if confirm:
                         final_photo = camera_photo
 
-            if final_photo:
+            if final_photo and st.button("Generate Greeting Card"):
+                boss_path = os.path.join("assets", "boss_photo.jpg")
+                if not os.path.exists(boss_path):
+                    st.error("boss_photo.jpg missing in assets")
+                    return
 
-                if st.button("Generate Greeting Card"):
+                boss = Image.open(boss_path)
+                employee_photo = Image.open(final_photo)
 
-                    boss_path = os.path.join("assets", "boss_photo.jpg")
+                card = create_card(
+                    boss,
+                    employee_photo,
+                    name,
+                    generate_message(name, designation, role)
+                )
 
-                    if not os.path.exists(boss_path):
-                        st.error("boss_photo.jpg missing in assets")
-                        return
+                st.image(card)
 
-                    boss = Image.open(boss_path)
-                    employee_photo = Image.open(final_photo)
+                buffer = io.BytesIO()
+                card.save(buffer, format="PNG")
 
-                    card = create_card(
-                        boss,
-                        employee_photo,
-                        name,
-                        generate_message(name, designation, role)
-                    )
-
-                    st.image(card)
-
-                    buffer = io.BytesIO()
-                    card.save(buffer, format="PNG")
-
-                    st.download_button(
-                        "Download Greeting Card",
-                        buffer.getvalue(),
-                        "greeting.png",
-                        "image/png"
-                    )
-
+                st.download_button(
+                    "Download Greeting Card",
+                    buffer.getvalue(),
+                    "greeting.png",
+                    "image/png"
+                )
         else:
             st.error("Employee not found")
 
 
 # ================= MAIN =================
-
 create_tables()
 
 if "login" not in st.session_state:
     st.session_state.login = False
 
 if not st.session_state.login:
-
     st.title("Login")
-
     u = st.text_input("Username")
     p = st.text_input("Password", type="password")
 
     if st.button("Login"):
-
         result = login_user(u, p)
-
         if result:
             st.session_state.login = True
             st.session_state.role = result[0]
             st.rerun()
         else:
             st.error("Invalid Login")
-
 else:
-
     if st.sidebar.button("Logout"):
         st.session_state.login = False
         st.rerun()
 
     if st.session_state.role == "ADMIN":
-
-        t1, t2, t3 = st.tabs([
-            "Employee Management",
-            "User Management",
-            "Greeting Generator"
-        ])
-
+        t1, t2, t3 = st.tabs(["Employee Management", "User Management", "Greeting Generator"])
         with t1:
             employee_management()
-
         with t2:
             user_management()
-
         with t3:
             greeting_generator()
-
     else:
         greeting_generator()
