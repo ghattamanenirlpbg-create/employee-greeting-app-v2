@@ -687,7 +687,7 @@ def greeting_generator():
 
 
 
-                    st.image(card)
+                    st.image(card, use_container_width=True)
 
 
 
