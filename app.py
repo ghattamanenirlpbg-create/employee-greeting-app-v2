@@ -135,7 +135,7 @@ def create_card(boss_photo, employee_photo, name, message):
 
     card = Image.new(
         "RGB",
-        (1600,1000),
+        (1200,750),
         "#FAF8F2"
     )
 
@@ -145,19 +145,19 @@ def create_card(boss_photo, employee_photo, name, message):
     try:
 
         title_font = ImageFont.truetype(
-            "arialbd.ttf",85
+            "arialbd.ttf",65
         )
 
         body_font = ImageFont.truetype(
-            "arial.ttf",38
+            "arial.ttf",32
         )
 
         name_font = ImageFont.truetype(
-            "arialbd.ttf",34
+            "arialbd.ttf",30
         )
 
         small_font = ImageFont.truetype(
-            "arial.ttf",30
+            "arial.ttf",26
         )
 
 
@@ -173,10 +173,10 @@ def create_card(boss_photo, employee_photo, name, message):
     # BORDER
 
     draw.rounded_rectangle(
-        (25,25,1575,975),
-        radius=35,
+        (15,15,1185,735),
+        radius=25,
         outline="#C99A2E",
-        width=8
+        width=6
     )
 
 
@@ -184,7 +184,6 @@ def create_card(boss_photo, employee_photo, name, message):
     # TITLE
 
     title="APPRECIATION NOTE"
-
 
     box=draw.textbbox(
         (0,0),
@@ -195,8 +194,8 @@ def create_card(boss_photo, employee_photo, name, message):
 
     draw.text(
         (
-        (1600-(box[2]-box[0]))/2,
-        60
+        (1200-(box[2]-box[0]))/2,
+        35
         ),
         title,
         font=title_font,
@@ -208,77 +207,56 @@ def create_card(boss_photo, employee_photo, name, message):
     # PHOTOS
 
     boss_photo=boss_photo.resize(
-        (300,300)
+        (230,230)
     )
 
+
     employee_photo=employee_photo.resize(
-        (300,300)
+        (230,230)
     )
 
 
 
     card.paste(
         boss_photo,
-        (120,270)
+        (70,180)
     )
 
 
     card.paste(
         employee_photo,
-        (1180,270)
+        (900,180)
     )
 
 
 
-    # LEFT PHOTO TEXT
+    # LEFT TEXT
 
-    draw.text(
-        (145,610),
-        "From:",
+    draw.multiline_text(
+        (70,430),
+        "From:\nDr. Damodharen M\nChief Digital Officer",
         font=small_font,
+        spacing=8,
         fill="#162447"
     )
 
 
-    draw.text(
-        (120,660),
-        "Dr. Damodharen M",
+
+    # RIGHT TEXT
+
+    draw.multiline_text(
+        (900,430),
+        f"To:\n{name}",
         font=name_font,
-        fill="#162447"
-    )
-
-
-    draw.text(
-        (140,710),
-        "Chief Digital Officer",
-        font=small_font,
+        spacing=10,
         fill="#162447"
     )
 
 
 
-    # RIGHT PHOTO TEXT
+    # MESSAGE CENTER
 
-    draw.text(
-        (1230,610),
-        "To:",
-        font=small_font,
-        fill="#162447"
-    )
-
-
-    draw.text(
-        (1180,660),
-        name,
-        font=name_font,
-        fill="#162447"
-    )
-
-
-
-    # CENTER MESSAGE
-
-    clean_message = message.replace(
+    clean_message=message.replace(
         "\n",
         " "
     )
@@ -286,11 +264,11 @@ def create_card(boss_photo, employee_photo, name, message):
 
     lines=textwrap.wrap(
         clean_message,
-        width=38
+        width=34
     )
 
 
-    y=320
+    y=200
 
 
     for line in lines:
@@ -303,12 +281,12 @@ def create_card(boss_photo, employee_photo, name, message):
         )
 
 
-        width=box[2]-box[0]
+        w=box[2]-box[0]
 
 
         draw.text(
             (
-            (1600-width)/2,
+            (1200-w)/2,
             y
             ),
             line,
@@ -317,7 +295,7 @@ def create_card(boss_photo, employee_photo, name, message):
         )
 
 
-        y += 65
+        y += 45
 
 
 
