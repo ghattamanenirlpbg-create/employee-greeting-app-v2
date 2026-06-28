@@ -19,31 +19,22 @@ html, body, [class*="css"] {
 }
 
 
-h1 { 
-    font-size: 40px !important; 
+[data-testid="stImage"] {
+    width: 100% !important;
 }
 
-
-h2 { 
-    font-size: 30px !important; 
-}
-
-
-.stButton button {
-    font-size: 16px !important;
-    padding: 8px 16px !important;
-}
-
-
-/* Greeting Card Display Fix */
 
 [data-testid="stImage"] img {
-
     width: 100% !important;
-    max-width: 1200px !important;
-
+    height: auto !important;
 }
 
+
+.block-container {
+    max-width: 95% !important;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+}
 
 </style>
 """, unsafe_allow_html=True)
@@ -681,7 +672,7 @@ def greeting_generator():
 
 
 
-                    st.image(card, width=1200)
+                    st.image(card,use_container_width=True)
 
 
 
