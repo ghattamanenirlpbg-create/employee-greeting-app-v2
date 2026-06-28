@@ -91,65 +91,75 @@ Thank you for your continued efforts.
 """
 
 
-# ================= CARD (IMPROVED DESIGN ONLY) =================
+# ================= CARD (IMPROVED PROFESSIONAL DESIGN) =================
 
 def create_card(boss_photo, employee_photo, name, message):
 
-    card = Image.new("RGB", (1400, 900), "white")
+    # Bigger canvas for better spacing
+    card = Image.new("RGB", (1600, 950), "white")
     draw = ImageDraw.Draw(card)
 
-    # Fonts (BIGGER + CLEANER HIERARCHY)
+    # Fonts (clean hierarchy)
     try:
-        title_font = ImageFont.truetype("arial.ttf", 80)
-        sub_font = ImageFont.truetype("arial.ttf", 48)
-        text_font = ImageFont.truetype("arial.ttf", 44)
-        footer_font = ImageFont.truetype("arial.ttf", 38)
+        title_font = ImageFont.truetype("arial.ttf", 78)
+        sub_font = ImageFont.truetype("arial.ttf", 42)
+        text_font = ImageFont.truetype("arial.ttf", 40)
+        footer_font = ImageFont.truetype("arial.ttf", 34)
     except:
         title_font = ImageFont.load_default()
         sub_font = ImageFont.load_default()
         text_font = ImageFont.load_default()
         footer_font = ImageFont.load_default()
 
-    # ================= TITLE =================
+    # ================= TITLE (CENTERED) =================
+    title = "APPRECIATION NOTE"
+    bbox = draw.textbbox((0, 0), title, font=title_font)
+    title_w = bbox[2] - bbox[0]
+
     draw.text(
-        (260, 30),
-        "APPRECIATION NOTE",
+        ((1600 - title_w) / 2, 25),
+        title,
         font=title_font,
         fill="black"
     )
 
     # ================= IMAGES =================
-    boss_photo = boss_photo.resize((340, 340))
-    employee_photo = employee_photo.resize((340, 340))
+    boss_photo = boss_photo.resize((360, 360))
+    employee_photo = employee_photo.resize((360, 360))
 
-    card.paste(boss_photo, (70, 200))
-    card.paste(employee_photo, (990, 200))
+    card.paste(boss_photo, (120, 200))
+    card.paste(employee_photo, (1120, 200))
 
-    # Labels under images
-    draw.text((120, 560), "From Leadership", font=sub_font, fill="black")
-    draw.text((1010, 560), f"{name}", font=sub_font, fill="black")
+    # Labels
+    draw.text((190, 580), "From Leadership", font=sub_font, fill="black")
+    draw.text((1200, 580), name, font=sub_font, fill="black")
 
-    # ================= MESSAGE CENTER =================
-    wrapped_text = textwrap.fill(message, width=42)
+    # ================= MESSAGE (TRUE CENTER ALIGN) =================
+    wrapped_lines = textwrap.wrap(message, width=45)
 
-    text_x = 420
-    text_y = 260
+    center_x = 800  # middle of 1600 canvas
+    start_y = 260
 
-    draw.multiline_text(
-        (text_x, text_y),
-        wrapped_text,
-        font=text_font,
-        spacing=14,
-        fill="black",
-        align="center"
-    )
+    for i, line in enumerate(wrapped_lines):
+        bbox = draw.textbbox((0, 0), line, font=text_font)
+        line_w = bbox[2] - bbox[0]
 
-    # ================= FOOTER =================
-    footer_text = "From: Dr. Damodharen M, Chief Digital Officer"
+        draw.text(
+            (center_x - line_w / 2, start_y + i * 55),
+            line,
+            font=text_font,
+            fill="black"
+        )
+
+    # ================= FOOTER (CENTERED CLEAN) =================
+    footer = "From: Dr. Damodharen M, Chief Digital Officer"
+
+    bbox = draw.textbbox((0, 0), footer, font=footer_font)
+    footer_w = bbox[2] - bbox[0]
 
     draw.text(
-        (320, 800),
-        footer_text,
+        ((1600 - footer_w) / 2, 880),
+        footer,
         font=footer_font,
         fill="black"
     )
