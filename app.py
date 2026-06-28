@@ -8,7 +8,7 @@ import textwrap
 
 DB_NAME = "employees.db"
 
-# ================= UI FONT (Streamlit only) =================
+# ================= STREAMLIT UI FONT (SAFE) =================
 st.markdown("""
 <style>
 html, body, [class*="css"] {
@@ -91,44 +91,51 @@ Thank you for your continued efforts.
 """
 
 
-# ================= CARD (FONT FIX HERE) =================
+# ================= CARD (FINAL FIXED DESIGN) =================
 
 def create_card(boss_photo, employee_photo, name, message):
 
     card = Image.new("RGB", (1400, 900), "white")
     draw = ImageDraw.Draw(card)
 
-    # 🔥 INCREASED FONT SIZE (MAIN FIX)
+    # 🔥 BIGGER & CLEAR FONT
     try:
-        title_font = ImageFont.truetype("arial.ttf", 85)
-        text_font = ImageFont.truetype("arial.ttf", 42)
+        title_font = ImageFont.truetype("arial.ttf", 90)
+        text_font = ImageFont.truetype("arial.ttf", 52)
     except:
         title_font = ImageFont.load_default()
         text_font = ImageFont.load_default()
 
-    # Title
-    draw.text((350, 40), "APPRECIATION NOTE", font=title_font, fill="black")
+    # Title (centered visually)
+    draw.text((350, 30), "APPRECIATION NOTE", font=title_font, fill="black")
 
-    # Images
-    boss_photo = boss_photo.resize((280, 280))
-    employee_photo = employee_photo.resize((280, 280))
+    # Resize images
+    boss_photo = boss_photo.resize((320, 320))
+    employee_photo = employee_photo.resize((320, 320))
 
-    card.paste(boss_photo, (100, 260))
-    card.paste(employee_photo, (1020, 260))
+    # Place images (balanced layout)
+    card.paste(boss_photo, (60, 250))
+    card.paste(employee_photo, (1020, 250))
 
-    # 🔥 BETTER WRAPPING FOR READABILITY
-    wrapped_message = textwrap.fill(message, width=28)
+    # ================= TEXT AREA FIX =================
+
+    # Center text block area (BETWEEN images)
+    text_start_x = 420
+    text_width = 560
+
+    wrapped_text = textwrap.fill(message, width=30)
 
     draw.multiline_text(
-        (420, 260),
-        wrapped_message,
+        (text_start_x, 260),
+        wrapped_text,
         font=text_font,
-        spacing=16,
+        spacing=20,
         fill="black"
     )
 
+    # Footer text
     draw.text(
-        (120, 620),
+        (120, 700),
         "From:\nManagement Team",
         font=text_font,
         fill="black"
@@ -199,7 +206,7 @@ def user_management():
         st.table(data)
 
 
-# ================= GREETING =================
+# ================= GREETING GENERATOR =================
 
 def greeting_generator():
 
@@ -243,7 +250,6 @@ def greeting_generator():
 
                 if camera_photo:
                     st.image(camera_photo, caption="Preview")
-
                     confirm = st.checkbox("Confirm this photo")
 
                     if confirm:
