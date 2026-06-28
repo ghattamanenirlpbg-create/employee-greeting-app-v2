@@ -8,6 +8,52 @@ import textwrap
 
 DB_NAME = "employees.db"
 
+# ================= STREAMLIT UI FIX (GLOBAL FONT SCALE) =================
+st.set_page_config(
+    page_title="Employee Recognition V2",
+    layout="wide"
+)
+
+st.markdown("""
+<style>
+html, body, [class*="css"] {
+    font-size: 20px !important;
+}
+
+/* Headings */
+h1 {
+    font-size: 48px !important;
+    font-weight: 700 !important;
+}
+
+h2 {
+    font-size: 36px !important;
+    font-weight: 600 !important;
+}
+
+h3 {
+    font-size: 28px !important;
+    font-weight: 600 !important;
+}
+
+/* Inputs */
+input, textarea {
+    font-size: 18px !important;
+}
+
+/* Buttons */
+.stButton button {
+    font-size: 18px !important;
+    padding: 10px 18px !important;
+}
+
+/* Sidebar */
+section[data-testid="stSidebar"] {
+    font-size: 18px !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 
 # ================= DATABASE =================
 
@@ -16,7 +62,6 @@ def get_connection():
 
 
 def create_tables():
-
     conn = get_connection()
     cur = conn.cursor()
 
@@ -42,7 +87,7 @@ def create_tables():
 
     if cur.fetchone() is None:
         cur.execute("""
-            INSERT INTO users VALUES(?,?,?)
+        INSERT INTO users VALUES(?,?,?)
         """, ("admin", "admin@123", "ADMIN"))
 
     conn.commit()
@@ -52,7 +97,6 @@ def create_tables():
 # ================= LOGIN =================
 
 def login_user(username, password):
-
     conn = get_connection()
 
     result = conn.execute("""
@@ -61,21 +105,18 @@ def login_user(username, password):
     """, (username, password)).fetchone()
 
     conn.close()
-
     return result
 
 
 # ================= MESSAGE =================
 
 def generate_message(name, designation, role):
-
     return f"""
 Dear {name},
 
 We truly appreciate your excellent contribution as {designation}.
 
-Your dedication, commitment and consistent efforts in the {role} role
-have created a positive impact.
+Your dedication, commitment and consistent efforts in the {role} role have created a positive impact.
 
 Your valuable contribution and support are highly appreciated.
 
@@ -83,48 +124,46 @@ Thank you for your continued efforts.
 """
 
 
-# ================= CARD DESIGN =================
+# ================= CARD CREATION =================
 
 def create_card(boss_photo, employee_photo, name, message):
 
     card = Image.new("RGB", (1400, 900), "white")
     draw = ImageDraw.Draw(card)
 
-    # Fonts
+    # Fonts (INCREASED SIZE FOR READABILITY)
     try:
-        title_font = ImageFont.truetype("arial.ttf", 50)
-        text_font = ImageFont.truetype("arial.ttf", 30)
-        small_font = ImageFont.truetype("arial.ttf", 26)
+        title_font = ImageFont.truetype("arial.ttf", 70)
+        text_font = ImageFont.truetype("arial.ttf", 40)
     except:
         title_font = ImageFont.load_default()
         text_font = ImageFont.load_default()
-        small_font = ImageFont.load_default()
-
-    # ================= BORDER DESIGN =================
-    border_color = (0, 102, 204)
-    draw.rectangle([(10, 10), (1390, 890)], outline=border_color, width=8)
-    draw.rectangle([(25, 25), (1375, 875)], outline=(200, 200, 200), width=2)
 
     # Title
-    draw.text((500, 40), "Appreciation Note", font=title_font, fill="black")
+    draw.text((380, 50), "APPRECIATION NOTE", font=title_font, fill="black")
 
-    # Resize images
-    boss_photo = boss_photo.resize((250, 250))
-    employee_photo = employee_photo.resize((250, 250))
+    # Images
+    boss_photo = boss_photo.resize((260, 260))
+    employee_photo = employee_photo.resize((260, 260))
 
-    # Paste images
     card.paste(boss_photo, (100, 250))
     card.paste(employee_photo, (1050, 250))
 
-    # Message box
-    wrapped_text = textwrap.fill(message, 45)
-    draw.multiline_text((400, 250), wrapped_text, font=text_font, spacing=10, fill="black")
+    # Wrapped message (improved readability)
+    wrapped_msg = textwrap.fill(message, 30)
 
-    # Signature (UPDATED)
+    draw.multiline_text(
+        (420, 250),
+        wrapped_msg,
+        font=text_font,
+        spacing=14,
+        fill="black"
+    )
+
     draw.text(
-        (100, 650),
-        "From:\nDr. Damodharen M\nChief Digital Officer",
-        font=small_font,
+        (120, 600),
+        "From:\nManagement Team",
+        font=text_font,
         fill="black"
     )
 
@@ -142,7 +181,6 @@ def employee_management():
     if option == "Add Employee":
 
         with st.form("emp"):
-
             emp_id = st.text_input("Employee ID")
             name = st.text_input("Name")
             designation = st.text_input("Designation")
@@ -152,24 +190,19 @@ def employee_management():
             submit = st.form_submit_button("Save")
 
             if submit:
-
                 conn = get_connection()
-
                 conn.execute("""
                     INSERT OR REPLACE INTO employees VALUES(?,?,?,?,?)
                 """, (emp_id, name, designation, role, email))
-
                 conn.commit()
                 conn.close()
 
                 st.success("Employee Saved")
 
     else:
-
         conn = get_connection()
         data = conn.execute("SELECT * FROM employees").fetchall()
         conn.close()
-
         st.table(data)
 
 
@@ -181,28 +214,23 @@ def user_management():
 
     username = st.text_input("Username")
     password = st.text_input("Password")
-
     role = st.selectbox("Role", ["USER", "ADMIN"])
 
     if st.button("Create User"):
 
         conn = get_connection()
-
         conn.execute("""
             INSERT OR REPLACE INTO users VALUES(?,?,?)
         """, (username, password, role))
-
         conn.commit()
         conn.close()
 
         st.success("User Created")
 
     if st.checkbox("View Users"):
-
         conn = get_connection()
         data = conn.execute("SELECT * FROM users").fetchall()
         conn.close()
-
         st.table(data)
 
 
@@ -217,13 +245,11 @@ def greeting_generator():
     if emp_id:
 
         conn = get_connection()
-
         employee = conn.execute("""
-            SELECT name, designation, role
+            SELECT name,designation,role
             FROM employees
             WHERE emp_id=?
         """, (emp_id,)).fetchone()
-
         conn.close()
 
         if employee:
@@ -234,19 +260,10 @@ def greeting_generator():
             st.write("Designation:", designation)
             st.write("Role:", role)
 
-            # ================= FIX: ONLY ONE OPTION =================
-            photo_option = st.radio(
-                "Select Photo Source",
-                ["Upload Photo", "Take Selfie"]
-            )
+            upload = st.file_uploader("Upload Photo")
+            camera = st.camera_input("Take Selfie")
 
-            final_photo = None
-
-            if photo_option == "Upload Photo":
-                final_photo = st.file_uploader("Upload Image", type=["png", "jpg", "jpeg"])
-
-            else:
-                final_photo = st.camera_input("Capture Selfie")
+            final_photo = camera if camera else upload
 
             if final_photo:
 
@@ -255,15 +272,15 @@ def greeting_generator():
                     boss_path = os.path.join("assets", "boss_photo.jpg")
 
                     if not os.path.exists(boss_path):
-                        st.error("boss_photo.jpg missing in assets folder")
+                        st.error("boss_photo.jpg missing in assets")
                         return
 
                     boss = Image.open(boss_path)
-                    employee_img = Image.open(final_photo)
+                    employee_photo = Image.open(final_photo)
 
                     card = create_card(
                         boss,
-                        employee_img,
+                        employee_photo,
                         name,
                         generate_message(name, designation, role)
                     )
@@ -284,18 +301,12 @@ def greeting_generator():
             st.error("Employee not found")
 
 
-# ================= MAIN =================
+# ================= MAIN APP =================
 
 create_tables()
 
-st.set_page_config(
-    page_title="Employee Recognition V2",
-    layout="wide"
-)
-
 if "login" not in st.session_state:
     st.session_state.login = False
-
 
 if not st.session_state.login:
 
@@ -312,7 +323,6 @@ if not st.session_state.login:
             st.session_state.login = True
             st.session_state.role = result[0]
             st.rerun()
-
         else:
             st.error("Invalid Login")
 
