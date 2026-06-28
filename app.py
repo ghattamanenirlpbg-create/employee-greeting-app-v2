@@ -101,9 +101,9 @@ def create_card(boss_photo, employee_photo, name, message):
 
     # Fonts (clean hierarchy)
     try:
-        title_font = ImageFont.truetype("arial.ttf", 78)
+        title_font = ImageFont.truetype("arial.ttf", 48)
         sub_font = ImageFont.truetype("arial.ttf", 42)
-        text_font = ImageFont.truetype("arial.ttf", 40)
+        text_font = ImageFont.truetype("arial.ttf", 34)
         footer_font = ImageFont.truetype("arial.ttf", 34)
     except:
         title_font = ImageFont.load_default()
