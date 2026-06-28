@@ -13,22 +13,38 @@ DB_NAME = "employees.db"
 
 st.markdown("""
 <style>
+
 html, body, [class*="css"] {
     font-size: 18px !important;
 }
+
 
 h1 { 
     font-size: 40px !important; 
 }
 
+
 h2 { 
     font-size: 30px !important; 
 }
+
 
 .stButton button {
     font-size: 16px !important;
     padding: 8px 16px !important;
 }
+
+
+/* Greeting Card Display Fix */
+
+[data-testid="stImage"] img {
+
+    width: 100% !important;
+    max-width: 1200px !important;
+
+}
+
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -665,7 +681,7 @@ def greeting_generator():
 
 
 
-                    st.image(card, use_container_width=True)
+                    st.image(card, width=1200)
 
 
 
