@@ -91,37 +91,32 @@ Thank you for your continued efforts.
 """
 
 
-# ================= CARD (IMPROVED PROFESSIONAL DESIGN) =================
+# ================= CARD (IMPROVED FIXED DESIGN) =================
 
 def create_card(boss_photo, employee_photo, name, message):
 
-    # Bigger canvas for better spacing
+    # Bigger canvas
     card = Image.new("RGB", (1600, 950), "white")
     draw = ImageDraw.Draw(card)
 
-    # Fonts (clean hierarchy)
+    # ✅ FIX: Use DejaVuSans (works in cloud + better readability)
     try:
-        title_font = ImageFont.truetype("arial.ttf", 48)
-        sub_font = ImageFont.truetype("arial.ttf", 42)
-        text_font = ImageFont.truetype("arial.ttf", 34)
-        footer_font = ImageFont.truetype("arial.ttf", 34)
+        title_font = ImageFont.truetype("DejaVuSans.ttf", 58)
+        sub_font = ImageFont.truetype("DejaVuSans.ttf", 40)
+        text_font = ImageFont.truetype("DejaVuSans.ttf", 38)
+        footer_font = ImageFont.truetype("DejaVuSans.ttf", 32)
     except:
         title_font = ImageFont.load_default()
         sub_font = ImageFont.load_default()
         text_font = ImageFont.load_default()
         footer_font = ImageFont.load_default()
 
-    # ================= TITLE (CENTERED) =================
+    # ================= TITLE =================
     title = "APPRECIATION NOTE"
     bbox = draw.textbbox((0, 0), title, font=title_font)
     title_w = bbox[2] - bbox[0]
 
-    draw.text(
-        ((1600 - title_w) / 2, 25),
-        title,
-        font=title_font,
-        fill="black"
-    )
+    draw.text(((1600 - title_w) / 2, 25), title, font=title_font, fill="black")
 
     # ================= IMAGES =================
     boss_photo = boss_photo.resize((360, 360))
@@ -130,28 +125,37 @@ def create_card(boss_photo, employee_photo, name, message):
     card.paste(boss_photo, (120, 200))
     card.paste(employee_photo, (1120, 200))
 
-    # Labels
-    draw.text((190, 580), "From Leadership", font=sub_font, fill="black")
+    # Labels under images
+    draw.text((150, 580), "From Leadership", font=sub_font, fill="black")
     draw.text((1200, 580), name, font=sub_font, fill="black")
 
-    # ================= MESSAGE (TRUE CENTER ALIGN) =================
-    wrapped_lines = textwrap.wrap(message, width=45)
+    # ================= MESSAGE (FIXED CENTER BLOCK) =================
 
-    center_x = 800  # middle of 1600 canvas
-    start_y = 260
+    # ✔ Narrower wrap = better readability
+    wrapped_lines = textwrap.wrap(message, width=42)
+
+    # ✔ Center column area (between images)
+    left_x = 420
+    right_x = 1180
+    center_x = (left_x + right_x) // 2
+
+    # ✔ Move DOWN so it doesn't overlap images
+    start_y = 650
+
+    line_height = 60
 
     for i, line in enumerate(wrapped_lines):
         bbox = draw.textbbox((0, 0), line, font=text_font)
         line_w = bbox[2] - bbox[0]
 
         draw.text(
-            (center_x - line_w / 2, start_y + i * 55),
+            (center_x - line_w / 2, start_y + i * line_height),
             line,
             font=text_font,
             fill="black"
         )
 
-    # ================= FOOTER (CENTERED CLEAN) =================
+    # ================= FOOTER =================
     footer = "From: Dr. Damodharen M, Chief Digital Officer"
 
     bbox = draw.textbbox((0, 0), footer, font=footer_font)
@@ -168,7 +172,7 @@ def create_card(boss_photo, employee_photo, name, message):
 
 
 # ================= EMPLOYEE MANAGEMENT =================
-
+# (UNCHANGED)
 def employee_management():
     st.subheader("Employee Management")
 
@@ -202,6 +206,7 @@ def employee_management():
 
 
 # ================= USER MANAGEMENT =================
+# (UNCHANGED)
 
 def user_management():
 
@@ -230,6 +235,7 @@ def user_management():
 
 
 # ================= GREETING GENERATOR =================
+# (UNCHANGED EXCEPT CARD CALL)
 
 def greeting_generator():
 
