@@ -4,9 +4,7 @@ from PIL import Image, ImageDraw, ImageFont
 import io
 import os
 import textwrap
-import os
-st.write(os.path.exists("fonts/arial.ttf"))
-st.write(os.path.exists("fonts/arial bold.ttf"))
+
 
 DB_NAME = "employees.db"
 
