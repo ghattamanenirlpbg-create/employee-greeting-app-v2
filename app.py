@@ -308,22 +308,27 @@ def create_card(boss_photo, employee_photo, name, message):
 
 def employee_management():
 
-    st.subheader("Employee Management")
+    st.subheader(
+        "Employee Management"
+    )
 
 
     option = st.selectbox(
         "Action",
         [
-            "Add Employee",
-            "View Employees"
+        "Add Employee",
+        "Modify Employee",
+        "View Employees"
         ]
     )
 
 
+    # ================= ADD =================
+
     if option == "Add Employee":
 
 
-        with st.form("emp"):
+        with st.form("emp_add"):
 
 
             emp_id = st.text_input(
@@ -378,7 +383,6 @@ def employee_management():
 
 
                 conn.commit()
-
                 conn.close()
 
 
@@ -386,6 +390,118 @@ def employee_management():
                     "Employee Saved"
                 )
 
+
+
+    # ================= MODIFY =================
+
+    elif option == "Modify Employee":
+
+
+        emp_id = st.text_input(
+            "Enter Employee ID to Modify"
+        )
+
+
+        if emp_id:
+
+
+            conn=get_connection()
+
+
+            employee=conn.execute(
+            """
+            SELECT *
+            FROM employees
+            WHERE emp_id=?
+            """,
+            (emp_id,)
+            ).fetchone()
+
+
+            conn.close()
+
+
+
+            if employee:
+
+
+                with st.form("emp_modify"):
+
+
+                    name=st.text_input(
+                        "Name",
+                        employee[1]
+                    )
+
+
+                    designation=st.text_input(
+                        "Designation",
+                        employee[2]
+                    )
+
+
+                    role=st.text_input(
+                        "Role",
+                        employee[3]
+                    )
+
+
+                    email=st.text_input(
+                        "Email",
+                        employee[4]
+                    )
+
+
+                    update=st.form_submit_button(
+                        "Update Employee"
+                    )
+
+
+                    if update:
+
+
+                        conn=get_connection()
+
+
+                        conn.execute(
+                        """
+                        UPDATE employees
+                        SET name=?,
+                        designation=?,
+                        role=?,
+                        email=?
+                        WHERE emp_id=?
+                        """,
+                        (
+                        name,
+                        designation,
+                        role,
+                        email,
+                        emp_id
+                        )
+                        )
+
+
+                        conn.commit()
+                        conn.close()
+
+
+                        st.success(
+                            "Employee Updated Successfully"
+                        )
+
+
+
+            else:
+
+                st.error(
+                    "Employee ID not found"
+                )
+
+
+
+
+    # ================= VIEW =================
 
     else:
 
@@ -417,61 +533,172 @@ def user_management():
     )
 
 
-    username=st.text_input(
-        "Username"
-    )
-
-
-    password=st.text_input(
-        "Password"
-    )
-
-
-    role=st.selectbox(
-        "Role",
+    option = st.selectbox(
+        "Action",
         [
-        "USER",
-        "ADMIN"
+        "Create User",
+        "Modify User",
+        "View Users"
         ]
     )
 
 
 
-    if st.button(
-        "Create User"
-    ):
+    # ================= CREATE =================
 
 
-        conn=get_connection()
+    if option=="Create User":
 
 
-        conn.execute(
-        """
-        INSERT OR REPLACE INTO users
-        VALUES(?,?,?)
-        """,
-        (
-        username,
-        password,
-        role
-        )
+        username=st.text_input(
+            "Username"
         )
 
 
-        conn.commit()
+        password=st.text_input(
+            "Password"
+        )
 
-        conn.close()
 
-
-        st.success(
-            "User Created"
+        role=st.selectbox(
+            "Role",
+            [
+            "USER",
+            "ADMIN"
+            ]
         )
 
 
 
-    if st.checkbox(
-        "View Users"
-    ):
+        if st.button(
+            "Create User"
+        ):
+
+
+            conn=get_connection()
+
+
+            conn.execute(
+            """
+            INSERT OR REPLACE INTO users
+            VALUES(?,?,?)
+            """,
+            (
+            username,
+            password,
+            role
+            )
+            )
+
+
+            conn.commit()
+            conn.close()
+
+
+            st.success(
+                "User Created"
+            )
+
+
+
+
+    # ================= MODIFY =================
+
+
+    elif option=="Modify User":
+
+
+        username=st.text_input(
+            "Enter Username to Modify"
+        )
+
+
+        if username:
+
+
+            conn=get_connection()
+
+
+            user=conn.execute(
+            """
+            SELECT *
+            FROM users
+            WHERE username=?
+            """,
+            (username,)
+            ).fetchone()
+
+
+            conn.close()
+
+
+
+            if user:
+
+
+                password=st.text_input(
+                    "Password",
+                    user[1]
+                )
+
+
+                role=st.selectbox(
+                    "Role",
+                    [
+                    "USER",
+                    "ADMIN"
+                    ],
+                    index=
+                    0 if user[2]=="USER" else 1
+                )
+
+
+
+                if st.button(
+                    "Update User"
+                ):
+
+
+                    conn=get_connection()
+
+
+                    conn.execute(
+                    """
+                    UPDATE users
+                    SET password=?,
+                    role=?
+                    WHERE username=?
+                    """,
+                    (
+                    password,
+                    role,
+                    username
+                    )
+                    )
+
+
+                    conn.commit()
+                    conn.close()
+
+
+                    st.success(
+                        "User Updated Successfully"
+                    )
+
+
+            else:
+
+
+                st.error(
+                    "Username not found"
+                )
+
+
+
+    # ================= VIEW =================
+
+
+    else:
 
 
         conn=get_connection()
