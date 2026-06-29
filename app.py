@@ -4,7 +4,9 @@ from PIL import Image, ImageDraw, ImageFont
 import io
 import os
 import textwrap
-
+import os
+st.write(os.path.exists("fonts/arial.ttf"))
+st.write(os.path.exists("fonts/arial bold.ttf"))
 
 DB_NAME = "employees.db"
 
@@ -143,26 +145,42 @@ def create_card(boss_photo, employee_photo, name, message):
     draw = ImageDraw.Draw(card)
 
 
+    # ================= FONT LOAD FROM PROJECT =================
+
+    FONT_PATH = "fonts"
+
+
     try:
 
         title_font = ImageFont.truetype(
-            "arialbd.ttf",65
+            os.path.join(FONT_PATH, "arialbd.ttf"),
+            65
         )
+
 
         body_font = ImageFont.truetype(
-            "arial.ttf",32
+            os.path.join(FONT_PATH, "arial.ttf"),
+            32
         )
+
 
         name_font = ImageFont.truetype(
-            "arialbd.ttf",30
+            os.path.join(FONT_PATH, "arialbd.ttf"),
+            30
         )
+
 
         small_font = ImageFont.truetype(
-            "arial.ttf",26
+            os.path.join(FONT_PATH, "arial.ttf"),
+            26
         )
 
 
-    except:
+    except Exception as e:
+
+
+        st.error(f"Font loading error: {e}")
+
 
         title_font = ImageFont.load_default()
         body_font = ImageFont.load_default()
