@@ -4,9 +4,39 @@ from PIL import Image, ImageDraw, ImageFont
 import io
 import os
 import textwrap
+import shutil
+from datetime import datetime
 
 
 DB_NAME = "employees.db"
+
+# ================= DATABASE BACKUP =================
+
+def backup_database():
+
+    if os.path.exists(DB_NAME):
+
+        backup_folder = "backup"
+
+
+        if not os.path.exists(backup_folder):
+            os.makedirs(backup_folder)
+
+
+        backup_file = os.path.join(
+            backup_folder,
+            "employees_backup_" 
+            +
+            datetime.now().strftime("%Y%m%d_%H%M%S")
+            +
+            ".db"
+        )
+
+
+        shutil.copy(
+            DB_NAME,
+            backup_file
+        )
 
 
 # ================= STREAMLIT UI =================
@@ -1181,6 +1211,8 @@ def greeting_generator():
 
 
 create_tables()
+
+backup_database()
 
 
 
