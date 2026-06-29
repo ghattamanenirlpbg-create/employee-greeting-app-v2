@@ -318,6 +318,7 @@ def employee_management():
         [
         "Add Employee",
         "Modify Employee",
+        "Delete Employee",
         "View Employees"
         ]
     )
@@ -363,9 +364,7 @@ def employee_management():
 
             if submit:
 
-
                 conn=get_connection()
-
 
                 conn.execute(
                 """
@@ -381,10 +380,8 @@ def employee_management():
                 )
                 )
 
-
                 conn.commit()
                 conn.close()
-
 
                 st.success(
                     "Employee Saved"
@@ -398,7 +395,7 @@ def employee_management():
 
 
         emp_id = st.text_input(
-            "Enter Employee ID to Modify"
+            "Enter Employee ID"
         )
 
 
@@ -419,7 +416,6 @@ def employee_management():
 
 
             conn.close()
-
 
 
             if employee:
@@ -487,17 +483,62 @@ def employee_management():
 
 
                         st.success(
-                            "Employee Updated Successfully"
+                            "Employee Updated"
                         )
 
 
+            else:
+
+                st.error(
+                    "Employee not found"
+                )
+
+
+
+    # ================= DELETE =================
+
+
+    elif option == "Delete Employee":
+
+
+        emp_id = st.text_input(
+            "Enter Employee ID to Delete"
+        )
+
+
+        if st.button(
+            "Delete Employee"
+        ):
+
+
+            conn=get_connection()
+
+
+            result=conn.execute(
+            """
+            DELETE FROM employees
+            WHERE emp_id=?
+            """,
+            (emp_id,)
+            )
+
+
+            conn.commit()
+            conn.close()
+
+
+
+            if result.rowcount:
+
+                st.success(
+                    "Employee Deleted Successfully"
+                )
 
             else:
 
                 st.error(
                     "Employee ID not found"
                 )
-
 
 
 
@@ -538,6 +579,7 @@ def user_management():
         [
         "Create User",
         "Modify User",
+        "Delete User",
         "View Users"
         ]
     )
@@ -545,7 +587,6 @@ def user_management():
 
 
     # ================= CREATE =================
-
 
     if option=="Create User":
 
@@ -567,7 +608,6 @@ def user_management():
             "ADMIN"
             ]
         )
-
 
 
         if st.button(
@@ -601,7 +641,6 @@ def user_management():
 
 
 
-
     # ================= MODIFY =================
 
 
@@ -609,7 +648,7 @@ def user_management():
 
 
         username=st.text_input(
-            "Enter Username to Modify"
+            "Enter Username"
         )
 
 
@@ -648,10 +687,8 @@ def user_management():
                     "USER",
                     "ADMIN"
                     ],
-                    index=
-                    0 if user[2]=="USER" else 1
+                    index=0 if user[2]=="USER" else 1
                 )
-
 
 
                 if st.button(
@@ -682,12 +719,69 @@ def user_management():
 
 
                     st.success(
-                        "User Updated Successfully"
+                        "User Updated"
                     )
 
 
             else:
 
+                st.error(
+                    "User not found"
+                )
+
+
+
+    # ================= DELETE =================
+
+
+    elif option=="Delete User":
+
+
+        username=st.text_input(
+            "Enter Username to Delete"
+        )
+
+
+        if st.button(
+            "Delete User"
+        ):
+
+
+            if username=="admin":
+
+                st.error(
+                    "Admin user cannot be deleted"
+                )
+
+                return
+
+
+
+            conn=get_connection()
+
+
+            result=conn.execute(
+            """
+            DELETE FROM users
+            WHERE username=?
+            """,
+            (username,)
+            )
+
+
+            conn.commit()
+            conn.close()
+
+
+
+            if result.rowcount:
+
+                st.success(
+                    "User Deleted Successfully"
+                )
+
+
+            else:
 
                 st.error(
                     "Username not found"
