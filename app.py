@@ -506,40 +506,100 @@ def employee_management():
         )
 
 
-        if st.button(
-            "Delete Employee"
-        ):
+        if emp_id:
 
 
             conn=get_connection()
 
 
-            result=conn.execute(
+            employee=conn.execute(
             """
-            DELETE FROM employees
+            SELECT *
+            FROM employees
             WHERE emp_id=?
             """,
             (emp_id,)
-            )
+            ).fetchone()
 
 
-            conn.commit()
             conn.close()
 
 
 
-            if result.rowcount:
+            if employee:
 
-                st.success(
-                    "Employee Deleted Successfully"
+
+                st.warning(
+                    "Employee details found. Please verify before deleting."
                 )
+
+
+                st.write(
+                    "Employee ID:",
+                    employee[0]
+                )
+
+                st.write(
+                    "Name:",
+                    employee[1]
+                )
+
+                st.write(
+                    "Designation:",
+                    employee[2]
+                )
+
+                st.write(
+                    "Role:",
+                    employee[3]
+                )
+
+                st.write(
+                    "Email:",
+                    employee[4]
+                )
+
+
+
+                confirm_delete = st.checkbox(
+                    "I confirm that I want to permanently delete this employee"
+                )
+
+
+                if confirm_delete:
+
+
+                    if st.button(
+                        "Delete Employee Permanently"
+                    ):
+
+
+                        conn=get_connection()
+
+
+                        conn.execute(
+                        """
+                        DELETE FROM employees
+                        WHERE emp_id=?
+                        """,
+                        (emp_id,)
+                        )
+
+
+                        conn.commit()
+                        conn.close()
+
+
+                        st.success(
+                            "Employee Deleted Successfully"
+                        )
+
 
             else:
 
                 st.error(
                     "Employee ID not found"
                 )
-
 
 
     # ================= VIEW =================
@@ -742,46 +802,94 @@ def user_management():
         )
 
 
-        if st.button(
-            "Delete User"
-        ):
-
-
-            if username=="admin":
-
-                st.error(
-                    "Admin user cannot be deleted"
-                )
-
-                return
-
+        if username:
 
 
             conn=get_connection()
 
 
-            result=conn.execute(
+            user=conn.execute(
             """
-            DELETE FROM users
+            SELECT *
+            FROM users
             WHERE username=?
             """,
             (username,)
-            )
+            ).fetchone()
 
 
-            conn.commit()
             conn.close()
 
 
 
-            if result.rowcount:
+            if user:
 
-                st.success(
-                    "User Deleted Successfully"
+
+                if username=="admin":
+
+                    st.error(
+                        "Admin user cannot be deleted"
+                    )
+
+                    return
+
+
+
+                st.warning(
+                    "User details found. Please verify before deleting."
                 )
 
 
+                st.write(
+                    "Username:",
+                    user[0]
+                )
+
+
+                st.write(
+                    "Role:",
+                    user[2]
+                )
+
+
+
+                confirm_delete=st.checkbox(
+                    "I confirm that I want to permanently delete this user"
+                )
+
+
+
+                if confirm_delete:
+
+
+                    if st.button(
+                        "Delete User Permanently"
+                    ):
+
+
+                        conn=get_connection()
+
+
+                        conn.execute(
+                        """
+                        DELETE FROM users
+                        WHERE username=?
+                        """,
+                        (username,)
+                        )
+
+
+                        conn.commit()
+                        conn.close()
+
+
+                        st.success(
+                            "User Deleted Successfully"
+                        )
+
+
             else:
+
 
                 st.error(
                     "Username not found"
