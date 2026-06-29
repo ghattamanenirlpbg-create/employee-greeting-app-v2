@@ -151,12 +151,7 @@ def create_card(boss_photo, employee_photo, name, message):
     BASE_DIR,
     "fonts"
 )
-    # TEMPORARY CHECK - put BEFORE try
-
-    st.write("Font folder:", FONT_PATH)
-    st.write("Arial exists:", os.path.exists(os.path.join(FONT_PATH,"arial.ttf")))
-    st.write("Arial Bold exists:", os.path.exists(os.path.join(FONT_PATH,"arialbd.ttf")))
-
+   
     try:
 
         title_font = ImageFont.truetype(
@@ -166,7 +161,7 @@ def create_card(boss_photo, employee_photo, name, message):
 
 
         body_font = ImageFont.truetype(
-            os.path.join(FONT_PATH, "ariblk.ttf"),
+            os.path.join(FONT_PATH, "arial.ttf"),
             18
         )
 
@@ -178,7 +173,7 @@ def create_card(boss_photo, employee_photo, name, message):
 
 
         small_font = ImageFont.truetype(
-            os.path.join(FONT_PATH, "ariblk.ttf"),
+            os.path.join(FONT_PATH, "arial.ttf"),
             24
         )
 
