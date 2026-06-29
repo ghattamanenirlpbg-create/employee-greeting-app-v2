@@ -145,8 +145,17 @@ def create_card(boss_photo, employee_photo, name, message):
 
     # ================= FONT LOAD FROM PROJECT =================
 
-    FONT_PATH = "fonts"
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+    FONT_PATH = os.path.join(
+    BASE_DIR,
+    "fonts"
+)
+    # TEMPORARY CHECK - put BEFORE try
+
+    st.write("Font folder:", FONT_PATH)
+    st.write("Arial exists:", os.path.exists(os.path.join(FONT_PATH,"arial.ttf")))
+    st.write("Arial Bold exists:", os.path.exists(os.path.join(FONT_PATH,"arialbd.ttf")))
 
     try:
 
@@ -157,20 +166,20 @@ def create_card(boss_photo, employee_photo, name, message):
 
 
         body_font = ImageFont.truetype(
-            os.path.join(FONT_PATH, "arial.ttf"),
-            32
+            os.path.join(FONT_PATH, "ariblk.ttf"),
+            18
         )
 
 
         name_font = ImageFont.truetype(
             os.path.join(FONT_PATH, "arialbd.ttf"),
-            30
+            24
         )
 
 
         small_font = ImageFont.truetype(
-            os.path.join(FONT_PATH, "arial.ttf"),
-            26
+            os.path.join(FONT_PATH, "ariblk.ttf"),
+            24
         )
 
 
@@ -281,7 +290,7 @@ def create_card(boss_photo, employee_photo, name, message):
 
     lines=textwrap.wrap(
         clean_message,
-        width=34
+        width=38
     )
 
 
