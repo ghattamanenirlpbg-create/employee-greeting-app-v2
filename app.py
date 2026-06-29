@@ -445,7 +445,7 @@ def employee_management():
 
 
         emp_id = st.text_input(
-            "Enter Employee ID"
+            "Enter Employee ID", key="modify_emp_id"
         )
 
 
@@ -552,7 +552,7 @@ def employee_management():
 
 
         emp_id = st.text_input(
-            "Enter Employee ID to Delete"
+            "Enter Employee ID to Delete", key="delete_emp_id"
         )
 
 
@@ -702,7 +702,7 @@ def user_management():
 
 
         username=st.text_input(
-            "Username"
+            "Username", key="create_username"
         )
 
 
@@ -758,7 +758,7 @@ def user_management():
 
 
         username=st.text_input(
-            "Enter Username"
+            "Enter Username", key="modify_username"
         )
 
 
@@ -848,7 +848,7 @@ def user_management():
 
 
         username=st.text_input(
-            "Enter Username to Delete"
+            "Enter Username to Delete", key="delete_username"
         )
 
 
@@ -982,7 +982,7 @@ def greeting_generator():
 
 
     emp_id=st.text_input(
-        "Enter Employee ID"
+        "Enter Employee ID", key="greeting_emp_id"
     )
 
 
